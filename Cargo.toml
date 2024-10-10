@@ -12,7 +12,7 @@ keywords = ["cli", "gal", "pal", "jed", "jedec"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-clap = "2.33.3"
+clap = "4.5.20"
 itertools = "0.9.0"
 thiserror = "1.0.23"
 test_bin = "0.4.0"

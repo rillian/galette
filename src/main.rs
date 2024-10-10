@@ -9,60 +9,60 @@
 extern crate clap;
 extern crate galette;
 
-use clap::{App, Arg};
+use clap::{Command, Arg, ArgAction};
 
 use std::process;
 
 use galette::writer;
 
 fn main() {
-    let matches = App::new("Galette")
+    let matches = Command::new("Galette")
         .version(env!("CARGO_PKG_VERSION"))
         .author("Simon Frankau <sgf@arbitrary.name>")
         .about("GALasm-compatible GAL assembler")
         .arg(
-            Arg::with_name("INPUT.pld")
+            Arg::new("INPUT.pld")
                 .help("Input file")
                 .required(true)
                 .index(1),
         )
         .arg(
-            Arg::with_name("secure")
-                .short("s")
+            Arg::new("secure")
+                .short('s')
                 .long("secure")
-                .takes_value(false)
-                .help("Enable security fuse"),
+                .help("Enable security fuse")
+                .action(ArgAction::SetTrue)
         )
         .arg(
-            Arg::with_name("nochip")
-                .short("c")
+            Arg::new("nochip")
+                .short('c')
                 .long("nochip")
-                .takes_value(false)
-                .help("Disable .chp file output"),
+                .help("Disable .chp file output")
+                .action(ArgAction::SetTrue)
         )
         .arg(
-            Arg::with_name("nofuse")
-                .short("f")
+            Arg::new("nofuse")
+                .short('f')
                 .long("nofuse")
-                .takes_value(false)
-                .help("Disable .fus file output"),
+                .help("Disable .fus file output")
+                .action(ArgAction::SetTrue)
         )
         .arg(
-            Arg::with_name("nopin")
-                .short("p")
+            Arg::new("nopin")
+                .short('p')
                 .long("nopin")
-                .takes_value(false)
-                .help("Disable .pin file output"),
+                .help("Disable .pin file output")
+                .action(ArgAction::SetTrue)
         )
         .get_matches();
 
-    let file_name = matches.value_of("INPUT.pld").unwrap();
+    let file_name = matches.get_one::<String>("INPUT.pld").unwrap();
 
     let config = writer::Config {
-        gen_fuse: !matches.is_present("nofuse"),
-        gen_chip: !matches.is_present("nochip"),
-        gen_pin: !matches.is_present("nopin"),
-        jedec_sec_bit: matches.is_present("secure"),
+        gen_fuse: !matches.get_flag("nofuse"),
+        gen_chip: !matches.get_flag("nochip"),
+        gen_pin: !matches.get_flag("nopin"),
+        jedec_sec_bit: matches.get_flag("secure"),
     };
 
     if let Err(e) = galette::assemble(file_name, &config) {
