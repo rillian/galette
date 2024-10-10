@@ -24,7 +24,6 @@ fn main() {
             Arg::new("INPUT.pld")
                 .help("Input file")
                 .required(true)
-                .index(1),
         )
         .arg(
             Arg::new("secure")
